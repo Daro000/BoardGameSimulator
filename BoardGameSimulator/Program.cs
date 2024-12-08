@@ -56,4 +56,18 @@ class Board
             }
         }
     }
+    public bool CheckForReward(int position)
+    {
+        return Rewards.ContainsKey(position);  
+    }
+
+    
+    public int GetReward(int position)
+    {
+        if (Rewards.ContainsKey(position))
+        {
+            return Rewards[position];  
+        }
+        return 0;  
+    }
 }
