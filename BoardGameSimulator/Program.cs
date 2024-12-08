@@ -71,3 +71,29 @@ class Board
         return 0;  
     }
 }
+
+class Game
+{
+    public List<Player> Players { get; set; }
+    public Board Board { get; set; }
+    public int CurrentTurn { get; set; }
+
+    public Game(List<Player> players, Board board)
+    {
+        Players = players;
+        Board = board;
+        CurrentTurn = 0;
+    }
+
+    public void StartGame()
+    {
+        Console.WriteLine("Gra rozpoczęta");
+        while (!IsGameOver())
+        {
+            TakeTurn();
+        }
+
+        DisplayResults();
+    }
+    
+}
