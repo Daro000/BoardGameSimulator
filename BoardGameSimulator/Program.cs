@@ -27,3 +27,33 @@ class Player
         Console.WriteLine($"{Name} zdobył {points} punktów. Aktualny wynik: {Score} ");
     }
 }
+
+class Board
+{
+    public int Size { get; set; }
+    public Dictionary<int, int> Rewards { get; set; }
+
+    public Board(int size)
+    {
+        Size = size;
+        Rewards = new Dictionary<int, int>();
+    }
+
+    public void GenerateRewards(int rewardCount)
+    {
+        Random random = new Random();
+        
+        
+        for (int i = 0; i < rewardCount; i++)
+        {
+            int position = random.Next(1, Size + 1);
+            int reward = random.Next(1, 101); 
+            
+            
+            if (!Rewards.ContainsKey(position))
+            {
+                Rewards[position] = reward;
+            }
+        }
+    }
+}
