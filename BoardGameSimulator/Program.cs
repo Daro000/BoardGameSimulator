@@ -72,16 +72,21 @@ class Board
     }
 }
 
+delegate void SpecialEvent(Player player);
 class Game
 {
+    public event SpecialEvent OnSpecialTile;
     public List<Player> Players { get; set; }
     public Board Board { get; set; }
     public int CurrentTurn { get; set; }
 
-    public Game(List<Player> players, Board board)
+    private Dictionary<Player, IPlayerType> PlayerTypes;
+
+    public Game(List<Player>players, Board board, Dictionary<Player, IPlayerType> playerTypes)
     {
         Players = players;
         Board = board;
+        PlayerTypes = playerTypes;
         CurrentTurn = 0;
     }
 
@@ -108,10 +113,17 @@ class Game
             int reward = Board.GetReward(currentPlayer.Position);
             Console.WriteLine($"{currentPlayer.Name} trafił na pole {currentPlayer.Position} i zdobył nagrode: {reward} ");
             currentPlayer.UpdateScore(reward);
+            
+            OnSpecialTile?.Invoke(currentPlayer);
         }
         else
         {
             Console.WriteLine($"{currentPlayer.Name} nie trafił na pole z nagrodą");
+        }
+        
+        if (PlayerTypes.ContainsKey(currentPlayer))
+        {
+            PlayerTypes[currentPlayer].SpecialMove(currentPlayer);
         }
         
         CurrentTurn = (CurrentTurn + 1) % Players.Count;
@@ -132,12 +144,12 @@ class Game
     }
 }
 
-interface IPlayer
+interface IPlayerType
 {
     void SpecialMove(Player player);
 }
 
-class Warrior : IPlayer
+class Warrior : IPlayerType
 {
     public void SpecialMove(Player player)
     {
@@ -146,7 +158,7 @@ class Warrior : IPlayer
     }
 }
 
-class Mage : IPlayer
+class Mage : IPlayerType
 {
     public void SpecialMove(Player player)
     {
@@ -155,7 +167,7 @@ class Mage : IPlayer
     }
 }
 
-class Healer : IPlayer
+class Healer : IPlayerType
 {
     public void SpecialMove(Player player)
     {
@@ -164,3 +176,5 @@ class Healer : IPlayer
     }
     
 }
+
+
