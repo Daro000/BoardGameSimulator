@@ -95,5 +95,72 @@ class Game
 
         DisplayResults();
     }
+
+    public void TakeTurn()
+    {
+        Player currentPlayer = Players[CurrentTurn];
+        Console.WriteLine($"Tura gracza {currentPlayer.Name}");
+        
+        currentPlayer.RollDiceAndMove();
+
+        if (Board.CheckForReward(currentPlayer.Position))
+        {
+            int reward = Board.GetReward(currentPlayer.Position);
+            Console.WriteLine($"{currentPlayer.Name} trafił na pole {currentPlayer.Position} i zdobył nagrode: {reward} ");
+            currentPlayer.UpdateScore(reward);
+        }
+        else
+        {
+            Console.WriteLine($"{currentPlayer.Name} nie trafił na pole z nagrodą");
+        }
+        
+        CurrentTurn = (CurrentTurn + 1) % Players.Count;
+    }
+
+    public bool IsGameOver()
+    {
+        return CurrentTurn >= 10;
+    }
+
+    public void DisplayResults()
+    {
+        Console.WriteLine("Koniec gry!! Wyniki:");
+        foreach (var player in Players)
+        {
+            Console.WriteLine($"{player.Name}: {player.Score} punktów");
+        }
+    }
+}
+
+interface IPlayer
+{
+    void SpecialMove(Player player);
+}
+
+class Warrior : IPlayer
+{
+    public void SpecialMove(Player player)
+    {
+        player.UpdateScore(50);
+        Console.WriteLine($"{player.Name} Wojownik wykonuje specjalny cios i zyskuje 50 pkt");
+    }
+}
+
+class Mage : IPlayer
+{
+    public void SpecialMove(Player player)
+    {
+        Console.WriteLine($"{player.Name} rzuca zaklecie i przesuwa sie o 2 pola");
+        player.Position += 2;
+    }
+}
+
+class Healer : IPlayer
+{
+    public void SpecialMove(Player player)
+    {
+        Console.WriteLine($"{player.Name} leczy sie i dodaje sobie 20 pkt");
+        player.UpdateScore(20);
+    }
     
 }
