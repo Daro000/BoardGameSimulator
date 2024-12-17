@@ -112,29 +112,36 @@ class Game
         if (Board.CheckForReward(currentPlayer.Position))
         {
             int reward = Board.GetReward(currentPlayer.Position);
-            Console.WriteLine($"{currentPlayer.Name} trafił na pole {currentPlayer.Position} i zdobył nagrode: {reward} ");
+            Console.WriteLine(
+                $"{currentPlayer.Name} trafił na pole {currentPlayer.Position} i zdobył nagrode: {reward} ");
             currentPlayer.UpdateScore(reward);
-            
+
             OnSpecialTile?.Invoke(currentPlayer);
+
+
+            if (PlayerTypes.ContainsKey(currentPlayer))
+            {
+                PlayerTypes[currentPlayer].SpecialMove(currentPlayer);
+            }
         }
         else
         {
             Console.WriteLine($"{currentPlayer.Name} nie trafił na pole z nagrodą");
         }
         
-        if (PlayerTypes.ContainsKey(currentPlayer))
-        {
-            PlayerTypes[currentPlayer].SpecialMove(currentPlayer);
-        }
-        
         CurrentTurn = (CurrentTurn + 1) % Players.Count;
         
         TotalTurns++;
+        
+        Console.WriteLine("Naciśnij Enter, aby kontynuować...");
+        Console.ReadLine();
+        
+        
     }
 
     public bool IsGameOver()
     {
-        return TotalTurns >= 10;
+        return TotalTurns >= 18;
     }
 
     public void DisplayResults()
