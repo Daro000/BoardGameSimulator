@@ -178,3 +178,28 @@ class Healer : IPlayerType
 }
 
 
+class Program
+{
+    static void Main(string[] args)
+    {
+        var player1 = new Player("boro", 0, 0);
+        var player2 = new Player("jolo", 0, 0);
+        var player3 = new Player("daro", 0, 0);
+
+        Dictionary<Player, IPlayerType> playerTypes = new Dictionary<Player, IPlayerType>
+        {
+            { player1, new Warrior() },
+            { player2, new Mage() },
+            { player3, new Healer() }
+        };
+        
+        Board board = new Board(20);
+        board.GenerateRewards(5);
+        
+        Game game = new Game(new List<Player> { player1, player2, player3 }, board, playerTypes);
+
+        game.OnSpecialTile += player => Console.WriteLine($"{player.Name} trafil na pole specjalne");
+        
+        game.StartGame();
+    }
+}
