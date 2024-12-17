@@ -79,7 +79,7 @@ class Game
     public List<Player> Players { get; set; }
     public Board Board { get; set; }
     public int CurrentTurn { get; set; }
-
+    public int TotalTurns { get; set; }
     private Dictionary<Player, IPlayerType> PlayerTypes;
 
     public Game(List<Player>players, Board board, Dictionary<Player, IPlayerType> playerTypes)
@@ -88,6 +88,7 @@ class Game
         Board = board;
         PlayerTypes = playerTypes;
         CurrentTurn = 0;
+        TotalTurns = 0;
     }
 
     public void StartGame()
@@ -127,11 +128,13 @@ class Game
         }
         
         CurrentTurn = (CurrentTurn + 1) % Players.Count;
+        
+        TotalTurns++;
     }
 
     public bool IsGameOver()
     {
-        return CurrentTurn >= 10;
+        return TotalTurns >= 10;
     }
 
     public void DisplayResults()
